@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   template="/WEB-INF/templates/default.xhtml">
+   <ui:define name="content">
+      <h1>This is TP and I suck!</h1>
+
+      <p>PapaRoach.</p>
+
+      <h:form id="reg">
+         <h2>Staff</h2>
+         <h:panelGrid columns="3" columnClasses="titleCell">
+            <h:outputLabel for="name" value="Name:"/>
+            <h:inputText id="name" value="#{newMember.name}" />
+            <h:message for="name" errorClass="invalid"/>
+
+            <h:outputLabel for="surname"  value="Surname:"/>
+            <h:inputText id="surname" value="#{newMember.surname}" />
+            <h:message for="surname" errorClass="invalid" />
+
+            <h:outputLabel for="email" value="Email:"/>
+            <h:inputText id="email" value="#{newMember.email}"/>
+            <h:message for="email" errorClass="invalid"/>
+
+            <h:outputLabel for="phoneNumber" value="Phone #:"/>
+            <h:inputText id="phoneNumber" value="#{newMember.phoneNumber}"/>
+            <h:message for="phoneNumber" errorClass="invalid"/>
+         </h:panelGrid>
+         <p>
+            <h:panelGrid columns="2">
+               <h:commandButton id="register" action="#{memberRegistration.register}" value="Register"/>
+               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
+                           globalOnly="true"/>
+            </h:panelGrid>
+         </p>
+      </h:form>
+
+      <h:form id="regSite">
+         <h2>Add new Site</h2>
+         <br/>
+         <h:panelGrid columns="3" columnClasses="titleCell">
+            <h:outputLabel for="name" value="Site Name:"/>
+            <h:inputText id="name" value="#{newSite.name}" />
+            <h:message for="name" errorClass="invalid"/>
+
+            <h:outputLabel for="siteCode"  value="Site Code:"/>
+            <h:inputText id="siteCode" value="#{newSite.siteCode}" />
+            <h:message for="siteCode" errorClass="invalid" />
+
+            <h:outputLabel for="siteSize" value="Site Size:"/>
+            <h:inputText id="siteSize" value="#{newSite.siteSize}"/>
+            <h:message for="siteSize" errorClass="invalid"/>
+         <p>
+            <h:panelGrid columns="2">
+               <h:commandButton id="register" action="#{siteRegistration.register}" value="Add"/>
+               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
+                           globalOnly="true"/>
+            </h:panelGrid>
+         </p>
+      </h:form>
+
+
+      <h2>Members</h2>
+      <h:panelGroup rendered="#{empty members}">
+         <em>No registered members.</em>
+      </h:panelGroup>
+      <h:dataTable var="_member" value="#{members}" rendered="#{not empty members}">
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+                #{_member.id}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+                #{_member.name}
+            </h:column>
+         <h:column>
+            <f:facet surname="header">Surname</f:facet>
+               #{_member.surname}
+         </h:column>
+         <h:column>
+            <f:facet name="header">Email</f:facet>
+                #{_member.email}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Phone #</f:facet>
+                #{_member.phoneNumber}
+            </h:column>
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/members/#{_member.id}">/rest/members/#{_member.id}</a>
+         </h:column>
+         <f:facet name="footer">
+            REST URL for all members: <a href="#{request.contextPath}/rest/members">/rest/members</a>
+         </f:facet>
+      </h:dataTable>
+
+      <h2>Sites</h2>
+      <h:panelGroup rendered="#{empty sites}">
+         <em>No registered sites.</em>
+      </h:panelGroup>
+      <h:dataTable var="_site" value="#{sites}" rendered="#{not empty sites}">
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+            #{_site.id}
+         </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+            #{_site.name}
+         </h:column>
+         <h:column>
+            <f:facet surname="header">Code</f:facet>
+            #{_site.siteCode}
+         </h:column>
+         <h:column>
+            <f:facet name="header">Size</f:facet>
+            #{_site.siteSize}
+         </h:column>
+
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/sites/#{_site.id}">/rest/sites/#{_site.id}</a>
+         </h:column>
+         <f:facet name="footer">
+            REST URL for all sites: <a href="#{request.contextPath}/rest/sites">/rest/sites</a>
+         </f:facet>
+      </h:dataTable>
+   </ui:define>
+</ui:composition>

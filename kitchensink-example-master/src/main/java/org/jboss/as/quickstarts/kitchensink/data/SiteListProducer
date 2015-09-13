@@ -1,0 +1,48 @@
+package org.jboss.as.quickstarts.kitchensink.data;
+
+import org.jboss.as.quickstarts.kitchensink.model.Member;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.event.Reception;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+@RequestScoped
+public class SiteListProducer {
+    @Inject
+    private EntityManager em;
+
+    private List<Site> sites;
+
+    // @Named provides access the return value via the EL variable name "members" in the UI (e.g.,
+    // Facelets or JSP view)
+    @Produces
+    @Named
+    public List<Site> getSites() {
+        return sites;
+    }
+
+    public void onSiteListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Site site) {
+        retrieveAllSitesOrderedByName();
+    }
+
+    @PostConstruct
+    public void retrieveAllSitesOrderedByName() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Site> criteria = cb.createQuery(Site.class);
+        Root<Site> site = criteria.from(Site.class);
+        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
+        // feature in JPA 2.0
+        // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
+        criteria.select(site).orderBy(cb.asc(site.get("name")));
+        sites = em.createQuery(criteria).getResultList();
+    }
+}
